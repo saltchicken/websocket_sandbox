@@ -63,9 +63,7 @@ class Server():
         try:
             while True:
                 message = await websocket.recv()
-                logger.debug(f"Server received: {message}")
-                # await asyncio.sleep(3)
-                # await websocket.send(message)
+                self.process_input(message)
         except ConnectionClosed:
             logger.debug(f"{path} disconnected")
             self.connected_clients.remove(websocket)
@@ -86,6 +84,9 @@ class Server():
         loop = asyncio.get_event_loop()
         user_input = await loop.run_in_executor(None, input, "Enter something: ")
         return user_input
+    
+    async def process_input(self, input):
+        logger.debug(input)
 
     async def main(self):
         async with websockets.serve(self.handle_client, "localhost", 8765):
