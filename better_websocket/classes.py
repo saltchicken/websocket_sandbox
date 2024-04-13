@@ -73,8 +73,9 @@ class Server():
         try:
             while True:
                 message = await websocket.recv()
-                loop = asyncio.get_event_loop()
-                result = await loop.run_in_executor(None, self.process_input, message)
+                result = await self.process_input(message)
+                # loop = asyncio.get_event_loop()
+                # result = await loop.run_in_executor(None, self.process_input, message)
         except ConnectionClosed:
             logger.debug(f"{path} disconnected")
             self.connected_clients.remove(websocket)
@@ -82,8 +83,10 @@ class Server():
     async def send_routine(self):
         # TODO: How can I properly break this loop?
         while True:
-            loop = asyncio.get_event_loop()
-            output = await loop.run_in_executor(None, self.send)
+            # TODO: Use next 2 lines for synchronous action.
+            # loop = asyncio.get_event_loop()
+            # output = await loop.run_in_executor(None, self.send)
+            output = await self.send()
             if output == 'quit':
                 for ws in self.connected_clients:
                     await ws.send('quit')
@@ -91,16 +94,20 @@ class Server():
             for ws in self.connected_clients:
                 await ws.send(output)
     
-    def send(self):
-        return input('Enter something yea:? ')
+    # def send(self):
+    #     return input('Enter something yea:? ')
     
-    def process_input(self, input):
-        time.sleep(3)
-        logger.debug(input)
-
-    # async def process_input(self, input):
-    #     asyncio.sleep(3)
+    # def process_input(self, input):
+    #     time.sleep(3)
     #     logger.debug(input)
+
+    async def send(self):
+        await asyncio.sleep(3)
+        return "test"
+
+    async def process_input(self, input):
+        # await asyncio.sleep(3)
+        logger.debug(input)
 
     async def main(self):
         async with websockets.serve(self.handle_client, "localhost", 8765):
