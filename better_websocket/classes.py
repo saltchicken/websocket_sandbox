@@ -3,6 +3,8 @@ import websockets
 from websockets.exceptions import ConnectionClosed
 from loguru import logger
 
+import time # For testing
+
 class Client():
     def __init__(self):
         pass
@@ -55,9 +57,42 @@ class Client():
 
 class Server():
     def __init__(self):
-        pass
+        self.connected_clients = set()
 
+    async def handle_client(self, websocket, path):
+        logger.debug(f"{path} connected")
+        self.connected_clients.add(websocket)
+        try:
+            while True:
+                message = await websocket.recv()
+                logger.debug(f"Server received: {message}")
+                # await asyncio.sleep(3)
+                # await websocket.send(message)
+        except ConnectionClosed:
+            logger.debug(f"{path} disconnected")
+            self.connected_clients.remove(websocket)
 
-if __name__ == "__main__":
-    client = Client()
-    asyncio.run(client.main())
+    async def input_routine(self):
+        # TODO: How can I properly break this loop?
+        while True:
+            user_input = await self.get_user_input()
+            if user_input == 'quit':
+                for ws in self.connected_clients:
+                    await ws.send('quit')
+                break
+            # logger.debug("You entered:", user_input)
+            for ws in self.connected_clients:
+                await ws.send(user_input)
+
+    async def get_user_input(self):
+        loop = asyncio.get_event_loop()
+        user_input = await loop.run_in_executor(None, input, "Enter something: ")
+        return user_input
+
+    async def main(self):
+        async with websockets.serve(self.handle_client, "localhost", 8765):
+            # asyncio.create_task(input_routine())
+            # await asyncio.Future()
+            task = self.input_routine()
+            result = await task
+            logger.debug("End of main reached")
