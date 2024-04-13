@@ -28,16 +28,24 @@ class Client():
     async def receive_routine(self, ws):
         try:
             while True:
-                response = await ws.recv()
-                if response == 'quit':
-                    logger.debug('Quit received')
-                    break
-                logger.debug(f"Received: {response}")
+                message = await ws.recv()
+                # TODO: self.process_input has to return True or else connection is broken.
+                result = await self.process_input(message)
+                if not result: break
         except ConnectionClosed:
             # TODO: This needs to quit the client
             logger.debug("Server closed connection")
         except asyncio.CancelledError:
             logger.debug("Routine cancelled")
+
+    async def process_input(self, input):
+        if input == 'quit':
+            logger.debug('Quit received')
+            return False
+        else:
+            logger.debug(f'Processing: {input}')
+            return True
+
 
 
     async def main(self):
@@ -63,7 +71,7 @@ class Server():
         try:
             while True:
                 message = await websocket.recv()
-                self.process_input(message)
+                result = await self.process_input(message)
         except ConnectionClosed:
             logger.debug(f"{path} disconnected")
             self.connected_clients.remove(websocket)
