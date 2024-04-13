@@ -22,6 +22,8 @@ async def input_routine():
     # TODO: How can I properly break this loop?
     while True:
         user_input = await get_user_input()
+        if user_input == 'quit':
+            break
         # logger.debug("You entered:", user_input)
         for ws in connected_clients:
             await ws.send(user_input)
@@ -33,8 +35,11 @@ async def get_user_input():
 
 async def main():
     async with websockets.serve(handle_client, "localhost", 8765):
-        asyncio.create_task(input_routine())
-        await asyncio.Future()
+        # asyncio.create_task(input_routine())
+        # await asyncio.Future()
+        task = input_routine()
+        result = await task
+        logger.debug("End of main reached")
 
 if __name__ == "__main__":
     asyncio.run(main())

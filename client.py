@@ -28,9 +28,13 @@ async def output_routine(ws):
 async def main():
     uri = "ws://localhost:8765"
     async with websockets.connect(uri) as websocket:
-        asyncio.create_task(input_routine(websocket))
-        asyncio.create_task(output_routine(websocket))
-        await asyncio.Future()
+        input_task = asyncio.create_task(input_routine(websocket))
+        # asyncio.create_task(output_routine(websocket))
+        task = output_routine(websocket)
+        await task
+        input_task.cancel()
+        logger.debug("End of main reached")
+        # await asyncio.Future()
 
 if __name__ == "__main__":
     asyncio.run(main())
