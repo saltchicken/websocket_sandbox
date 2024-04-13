@@ -9,15 +9,15 @@ connected_server = None
 async def input_routine(connected_server):
     # TODO: How can I properly break this loop?
     while True:
-        user_input = await get_user_input_and_send(connected_server)
+        user_input = await get_user_input(connected_server)
         # logger.debug(f"You entered: {user_input}")
+        if connected_server is not None:
+            # logger.debug(f"Sending: {user_input}")
+            await connected_server.send(user_input)
 
-async def get_user_input_and_send(connected_server):
+async def get_user_input(connected_server):
     loop = asyncio.get_event_loop()
     user_input = await loop.run_in_executor(None, input, "Enter something: ")
-    if connected_server is not None:
-        logger.debug(f"Sending: {user_input}")
-        await connected_server.send(user_input)
     return user_input
 
 async def output_routine(connected_server):

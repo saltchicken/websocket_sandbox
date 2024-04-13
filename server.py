@@ -21,14 +21,14 @@ async def handle_client(websocket, path):
 async def input_routine():
     # TODO: How can I properly break this loop?
     while True:
-        user_input = await get_user_input_and_send()
-        logger.debug("You entered:", user_input)
+        user_input = await get_user_input()
+        # logger.debug("You entered:", user_input)
+        for ws in connected_clients:
+            await ws.send(user_input)
 
-async def get_user_input_and_send():
+async def get_user_input():
     loop = asyncio.get_event_loop()
     user_input = await loop.run_in_executor(None, input, "Enter something: ")
-    for ws in connected_clients:
-            await ws.send(user_input)
     return user_input
 
 async def main():
