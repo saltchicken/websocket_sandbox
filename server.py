@@ -11,10 +11,12 @@ async def handle_client(websocket, path):
     try:
         while True:
             message = await websocket.recv()
-            await asyncio.sleep(3)
-            await websocket.send(message)
+            logger.debug(f"Server received: {message}")
+            # await asyncio.sleep(3)
+            # await websocket.send(message)
     except ConnectionClosed:
         logger.debug(f"{path} disconnected")
+        connected_clients.remove(websocket)
 
 async def input_routine():
     # TODO: How can I properly break this loop?
