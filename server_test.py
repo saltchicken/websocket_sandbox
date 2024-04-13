@@ -2,7 +2,6 @@ from better_websocket.classes import Server
 import asyncio
 
 from loguru import logger
-import time
 
 class BetterServer(Server):
     def __init__(self):

@@ -82,6 +82,7 @@ class Server():
         try:
             while True:
                 message = await websocket.recv()
+                # TODO: Run this in its own thread? Why does it block?
                 result = await self.process_input(message)
                 # loop = asyncio.get_event_loop()
                 # result = await loop.run_in_executor(None, self.process_input, message)
