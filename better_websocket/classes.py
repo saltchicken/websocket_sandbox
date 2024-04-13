@@ -79,20 +79,18 @@ class Server():
     async def send_routine(self):
         # TODO: How can I properly break this loop?
         while True:
-            user_input = await self.get_user_input()
-            if user_input == 'quit':
+            loop = asyncio.get_event_loop()
+            output = await loop.run_in_executor(None, self.send)
+            if output == 'quit':
                 for ws in self.connected_clients:
                     await ws.send('quit')
                 break
-            # logger.debug("You entered:", user_input)
             for ws in self.connected_clients:
-                await ws.send(user_input)
-
-    async def get_user_input(self):
-        loop = asyncio.get_event_loop()
-        user_input = await loop.run_in_executor(None, input, "Enter something: ")
-        return user_input
+                await ws.send(output)
     
+    def send(self):
+        return input('Enter something yea:? ')
+
     async def process_input(self, input):
         logger.debug(input)
 
