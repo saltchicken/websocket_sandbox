@@ -4,7 +4,7 @@ from websockets.exceptions import ConnectionClosed
 
 from loguru import logger
 
-async def input_routine(ws):
+async def send_routine(ws):
     # TODO: How can I properly break this loop?
     while True:
         try:
@@ -22,7 +22,7 @@ async def get_user_input():
     user_input = await loop.run_in_executor(None, input, "Enter something: ")
     return user_input
 
-async def output_routine(ws):
+async def receive_routine(ws):
     try:
         while True:
             response = await ws.recv()
@@ -40,11 +40,11 @@ async def output_routine(ws):
 async def main():
     uri = "ws://localhost:8765"
     async with websockets.connect(uri) as websocket:
-        # input_task = asyncio.create_task(input_routine(websocket))
-        task = asyncio.create_task(output_routine(websocket))
-        input_task = input_routine(websocket)
-        # task = output_routine(websocket)
-        await input_task
+        # send_task = asyncio.create_task(send_routine(websocket))
+        task = asyncio.create_task(receive_routine(websocket))
+        send_task = send_routine(websocket)
+        # task = receive_routine(websocket)
+        await send_task
         task.cancel()
         logger.debug("End of main reached")
         # await asyncio.Future()

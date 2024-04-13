@@ -18,7 +18,7 @@ async def handle_client(websocket, path):
         logger.debug(f"{path} disconnected")
         connected_clients.remove(websocket)
 
-async def input_routine():
+async def send_routine():
     # TODO: How can I properly break this loop?
     while True:
         user_input = await get_user_input()
@@ -37,9 +37,9 @@ async def get_user_input():
 
 async def main():
     async with websockets.serve(handle_client, "localhost", 8765):
-        # asyncio.create_task(input_routine())
+        # asyncio.create_task(send_routine())
         # await asyncio.Future()
-        task = input_routine()
+        task = send_routine()
         result = await task
         logger.debug("End of main reached")
 
