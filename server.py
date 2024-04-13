@@ -22,7 +22,7 @@ async def input_routine():
     # TODO: How can I properly break this loop?
     while True:
         user_input = await get_user_input_and_send()
-        print("You entered:", user_input)
+        logger.debug("You entered:", user_input)
 
 async def get_user_input_and_send():
     loop = asyncio.get_event_loop()
