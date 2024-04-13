@@ -13,19 +13,20 @@ class Client():
         # TODO: How can I properly break this loop?
         while True:
             try:
-                user_input = await self.get_user_input()
-                if user_input == 'quit':
+                output = await self.send()
+                if output == 'quit':
+                    logger.debug('Received quit')
                     break
                 # logger.debug(f"You entered: {user_input}")
-                await ws.send(user_input)
+                await ws.send(output)
             except websockets.exceptions.ConnectionClosedOK:
                 logger.warning('Connection was already closed. Breaking')
                 break
 
-    async def get_user_input(self):
-        loop = asyncio.get_event_loop()
-        user_input = await loop.run_in_executor(None, input, "Enter something: ")
-        return user_input
+    # async def get_user_input(self):
+    #     loop = asyncio.get_event_loop()
+    #     user_input = await loop.run_in_executor(None, input, "Enter something: ")
+    #     return user_input
 
     async def receive_routine(self, ws):
         try:
@@ -47,6 +48,14 @@ class Client():
         else:
             logger.debug(f'Processing: {input}')
             return True
+        
+    async def send(self):
+        # await asyncio.sleep(3)
+        # return "test"
+    
+        loop = asyncio.get_event_loop()
+        output = await loop.run_in_executor(None, input, 'hello:')
+        return output
 
 
 
