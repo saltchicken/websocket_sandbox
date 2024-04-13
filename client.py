@@ -7,11 +7,15 @@ from loguru import logger
 async def input_routine(ws):
     # TODO: How can I properly break this loop?
     while True:
-        user_input = await get_user_input()
-        if user_input == 'quit':
+        try:
+            user_input = await get_user_input()
+            if user_input == 'quit':
+                break
+            # logger.debug(f"You entered: {user_input}")
+            await ws.send(user_input)
+        except websockets.exceptions.ConnectionClosedOK:
+            logger.warning('Connection was already closed. Breaking')
             break
-        # logger.debug(f"You entered: {user_input}")
-        await ws.send(user_input)
 
 async def get_user_input():
     loop = asyncio.get_event_loop()

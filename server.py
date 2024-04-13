@@ -23,7 +23,8 @@ async def input_routine():
     while True:
         user_input = await get_user_input()
         if user_input == 'quit':
-            await ws.send('quit')
+            for ws in connected_clients:
+                await ws.send('quit')
             break
         # logger.debug("You entered:", user_input)
         for ws in connected_clients:
