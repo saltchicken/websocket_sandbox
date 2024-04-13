@@ -102,11 +102,15 @@ class Server():
     #     logger.debug(input)
 
     async def send(self):
-        await asyncio.sleep(3)
-        return "test"
+        # await asyncio.sleep(3)
+        # return "test"
+    
+        loop = asyncio.get_event_loop()
+        output = await loop.run_in_executor(None, input, 'hello:')
+        return output
 
     async def process_input(self, input):
-        # await asyncio.sleep(3)
+        await asyncio.sleep(3)
         logger.debug(input)
 
     async def main(self):
