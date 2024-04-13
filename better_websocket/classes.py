@@ -3,8 +3,6 @@ import websockets
 from websockets.exceptions import ConnectionClosed
 from loguru import logger
 
-import time # For testing
-
 class Client():
     def __init__(self):
         pass
