@@ -3,6 +3,16 @@ import multiprocessing, queue, asyncio
 
 from loguru import logger
 
+class BetterServerController():
+    def __init__(self):
+        self.q = multiprocessing.Queue()
+        self.process = multiprocessing.Process(target=self.start_server, args=(self.q,))
+        self.process.start()
+
+    def start_server(self, queue):
+        server = BetterServer(queue)
+        server.run()
+
 class BetterServer(Server):
     def __init__(self, queue):
         super().__init__()
@@ -22,22 +32,15 @@ class BetterServer(Server):
             await asyncio.sleep(0.3)
             # return "Nope"
 
-def start_server(queue):
-    server = BetterServer(queue)
-    server.run()
 
-def server_init():
-    q = multiprocessing.Queue()
-    process = multiprocessing.Process(target=start_server, args=(q,))
-    return process, q
 
 if __name__ == "__main__":
-    process, q = server_init()
-    process.start()
+    server_controller = BetterServerController()
+    # server_controller.process.start()
     try:
         while True:
             user_input = input()
-            q.put(user_input)
+            server_controller.q.put(user_input)
     except KeyboardInterrupt:
         pass
-    process.join()
+    server_controller.process.join()
