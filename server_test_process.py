@@ -1,4 +1,4 @@
-from experimental.classes import Controller
+from better_websocket.experimental import Controller
 
 if __name__ == "__main__":
     server_controller = Controller(server_bool=True)
