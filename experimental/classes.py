@@ -35,10 +35,11 @@ class BetterServer(Server):
         self.send_q = send_q
         self.receive_q = receive_q
     
-    # async def process_input(self, input):
-    #     # return super().process_input(input)
-    #     logger.debug(f"ADding to queue: {input}")
-    #     await self.queue.put(input)
+    async def process_input(self, input):
+        # return super().process_input(input)
+        logger.debug(f"Client received: {input}")
+        self.receive_q.put(input)
+        return True
 
     async def send(self):
         try:
