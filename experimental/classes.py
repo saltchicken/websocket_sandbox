@@ -24,9 +24,6 @@ class BetterServerController(Controller):
         self.server = BetterServer(self._q)
         self.server.run()
 
-    def put(self, message):
-        self._q.put(message)
-
 class BetterClientController(Controller):
     def __init__(self):
         super().__init__()
@@ -37,18 +34,16 @@ class BetterClientController(Controller):
         self.client = BetterClient(self._q)
         self.client.run()
 
-    def put(self, message):
-        self._q.put(message)
-
 
 class BetterServer(Server):
     def __init__(self, queue):
         super().__init__()
         self.queue = queue
     
-    # def process_input(self, input):
+    # async def process_input(self, input):
     #     # return super().process_input(input)
-    #     logger.debug(f"Process this: {input}")
+    #     logger.debug(f"ADding to queue: {input}")
+    #     await self.queue.put(input)
 
     async def send(self):
         try:
@@ -67,6 +62,12 @@ class BetterClient(Client):
     def __init__(self, queue):
         super().__init__()
         self.queue = queue
+
+    # async def process_input(self, input):
+    #     # return super().process_input(input)
+    #     logger.debug(f"ADding to queue: {input}")
+    #     await self.queue.put(input)
+    #     print('complet')
 
     async def send(self):
         try:
