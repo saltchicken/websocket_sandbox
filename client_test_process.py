@@ -5,7 +5,7 @@ if __name__ == "__main__":
     try:
         while True:
             user_input = input()
-            client_controller._q.put(user_input)
+            client_controller.put(user_input)
     except KeyboardInterrupt:
         pass
     # client_controller.process.join()

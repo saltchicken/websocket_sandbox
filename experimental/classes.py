@@ -13,6 +13,9 @@ class BetterServerController():
         self.server = BetterServer(self._q)
         self.server.run()
 
+    def put(self, message):
+        self._q.put(message)
+
 
 class BetterServer(Server):
     def __init__(self, queue):
@@ -43,6 +46,9 @@ class BetterClientController():
     def start_client(self):
         self.client = BetterClient(self._q)
         self.client.run()
+
+    def put(self, message):
+        self._q.put(message)
 
 class BetterClient(Client):
     def __init__(self, queue):
