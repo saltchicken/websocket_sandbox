@@ -71,8 +71,6 @@ class BetterClient(Client):
         logger.debug(f"Client received: {input}")
         self.receive_q.put(input)
         return True
-        # await self.queue.put(input)
-        # print('complet')
 
     async def send(self):
         try:
