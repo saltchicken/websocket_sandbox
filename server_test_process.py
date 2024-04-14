@@ -5,7 +5,7 @@ if __name__ == "__main__":
     try:
         while True:
             user_input = input()
-            server_controller.q.put(user_input)
+            server_controller._q.put(user_input)
     except KeyboardInterrupt:
         pass
-    server_controller.process.join()
+    # server_controller.process.join()

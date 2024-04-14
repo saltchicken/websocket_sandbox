@@ -5,13 +5,14 @@ from loguru import logger
 
 class BetterServerController():
     def __init__(self):
-        self.q = multiprocessing.Queue()
-        self.process = multiprocessing.Process(target=self.start_server, args=(self.q,))
-        self.process.start()
+        self._q = multiprocessing.Queue()
+        self._process = multiprocessing.Process(target=self.start_server)
+        self._process.start()
 
-    def start_server(self, queue):
-        server = BetterServer(queue)
-        server.run()
+    def start_server(self):
+        self.server = BetterServer(self._q)
+        self.server.run()
+
 
 class BetterServer(Server):
     def __init__(self, queue):
@@ -35,13 +36,13 @@ class BetterServer(Server):
 
 class BetterClientController():
     def __init__(self):
-        self.q = multiprocessing.Queue()
-        self.process = multiprocessing.Process(target=self.start_client, args=(self.q,))
-        self.process.start()
+        self._q = multiprocessing.Queue()
+        self._process = multiprocessing.Process(target=self.start_client)
+        self._process.start()
 
-    def start_client(self, queue):
-        client = BetterClient(queue)
-        client.run()
+    def start_client(self):
+        self.client = BetterClient(self._q)
+        self.client.run()
 
 class BetterClient(Client):
     def __init__(self, queue):
