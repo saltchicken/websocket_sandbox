@@ -18,4 +18,4 @@ class BetterServer(Server):
 
 if __name__ == "__main__":
     server = BetterServer()
-    asyncio.run(server.main())
+    server.run()

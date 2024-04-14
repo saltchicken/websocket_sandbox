@@ -71,6 +71,9 @@ class Client():
             logger.debug("End of main reached")
             # await asyncio.Future()
 
+    def run(self):
+        asyncio.run(self.main())
+
 
 class Server():
     def __init__(self):
@@ -130,3 +133,6 @@ class Server():
             task = self.send_routine()
             result = await task
             logger.debug("End of main reached")
+
+    def run(self):
+        asyncio.run(self.main())

@@ -7,4 +7,4 @@ class BetterClient(Client):
 
 if __name__ == "__main__":
     client = Client()
-    asyncio.run(client.main())
+    client.run()
