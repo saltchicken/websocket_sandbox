@@ -12,6 +12,7 @@ class Client():
         while True:
             try:
                 output = await self.send()
+                if not output: continue
                 if output == 'quit':
                     logger.debug('Received quit')
                     break
