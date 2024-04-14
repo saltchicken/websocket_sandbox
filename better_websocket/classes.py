@@ -3,8 +3,6 @@ import websockets
 from websockets.exceptions import ConnectionClosed
 from loguru import logger
 
-import time
-
 class Client():
     def __init__(self):
         pass
@@ -100,6 +98,7 @@ class Server():
             # loop = asyncio.get_event_loop()
             # output = await loop.run_in_executor(None, self.send)
             output = await self.send()
+            if not output: continue
             if output == 'quit':
                 for ws in self.connected_clients:
                     await ws.send('quit')
@@ -115,12 +114,12 @@ class Server():
     #     logger.debug(input)
 
     async def send(self):
-        # await asyncio.sleep(3)
-        # return "test"
+        await asyncio.sleep(3)
+        return "test"
     
-        loop = asyncio.get_event_loop()
-        output = await loop.run_in_executor(None, input, 'hello:')
-        return output
+        # loop = asyncio.get_event_loop()
+        # output = await loop.run_in_executor(None, input, 'hello:')
+        # return output
 
     async def process_input(self, input):
         await asyncio.sleep(3)
