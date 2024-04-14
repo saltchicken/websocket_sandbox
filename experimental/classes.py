@@ -3,15 +3,39 @@ import multiprocessing, queue, asyncio
 
 from loguru import logger
 
-class BetterServerController():
+class Controller():
     def __init__(self):
         self._q = multiprocessing.Queue()
+    
+    def put(self, message):
+        self._q.put(message)
+
+    def get(self):
+        message = self._q.get()
+        return message
+
+class BetterServerController(Controller):
+    def __init__(self):
+        super().__init__()
         self._process = multiprocessing.Process(target=self.start_server)
         self._process.start()
 
     def start_server(self):
         self.server = BetterServer(self._q)
         self.server.run()
+
+    def put(self, message):
+        self._q.put(message)
+
+class BetterClientController(Controller):
+    def __init__(self):
+        super().__init__()
+        self._process = multiprocessing.Process(target=self.start_client)
+        self._process.start()
+
+    def start_client(self):
+        self.client = BetterClient(self._q)
+        self.client.run()
 
     def put(self, message):
         self._q.put(message)
@@ -37,18 +61,7 @@ class BetterServer(Server):
             # return "Nope"
 
 
-class BetterClientController():
-    def __init__(self):
-        self._q = multiprocessing.Queue()
-        self._process = multiprocessing.Process(target=self.start_client)
-        self._process.start()
 
-    def start_client(self):
-        self.client = BetterClient(self._q)
-        self.client.run()
-
-    def put(self, message):
-        self._q.put(message)
 
 class BetterClient(Client):
     def __init__(self, queue):
