@@ -1,7 +1,7 @@
-from experimental.classes import BetterClientController
+from experimental.classes import Controller
 
 if __name__ == "__main__":
-    client_controller = BetterClientController()
+    client_controller = Controller()
     try:
         while True:
             user_input = input()

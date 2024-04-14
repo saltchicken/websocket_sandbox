@@ -1,7 +1,7 @@
-from experimental.classes import BetterServerController
+from experimental.classes import Controller
 
 if __name__ == "__main__":
-    server_controller = BetterServerController()
+    server_controller = Controller(server_bool=True)
     try:
         while True:
             user_input = input()
